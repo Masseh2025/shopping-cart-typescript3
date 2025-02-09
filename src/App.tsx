@@ -5,14 +5,18 @@ import {
   ProductListDispatchContext,
 } from "./contexts/ProductListContext";
 
-type ItemsType = { name: string; quantity: number; price: number };
+type ItemsType = {
+  name: string;
+  quantity: number;
+  price: number;
+};
 
 export type StateProps = { items: ItemsType[] };
 
-export type Actions = { type: "decrement" };
+export type Actions = { type: "select" };
 export type ActionsWithPayload =
-  | { type: "select"; payload: string }
-  | { type: "increment"; payload: [name: string, price: number] };
+  | { type: "increment"; payload: [name: string, price: number] }
+  | { type: "decrement"; payload: [name: string, price: number] };
 
 function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
   switch (action.type) {
@@ -28,7 +32,11 @@ function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
         items: [
           {
             name: name,
-            quantity: itemsExists ? itemsExists.quantity + 1 : 0,
+            quantity: itemsExists
+              ? itemsExists.quantity >= 50
+                ? 50
+                : itemsExists.quantity + 1
+              : 1,
             price: price,
           },
           ...state.items.filter((item) => item !== itemsExists),
@@ -36,19 +44,37 @@ function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
       };
     }
 
-    case "decrement":
-      console.log("decrement");
-      return { ...state };
+    case "decrement": {
+      const [name, price] = action.payload;
+      console.log(action.payload);
+
+      const itemsExists = state.items.find((item) =>
+        item.name.toLowerCase().includes(name.toLowerCase())
+      );
+
+      return {
+        items: [
+          {
+            name: name,
+            quantity: itemsExists
+              ? itemsExists.quantity < 1
+                ? 0
+                : itemsExists.quantity - 1
+              : 1,
+            price: price,
+          },
+          ...state.items.filter((item) => item !== itemsExists),
+        ],
+      };
+    }
+
     case "select":
       return { ...state };
   }
 }
 
 const initialState: StateProps = {
-  items: [
-    { name: "Vanilla Bean Crème Brûlée", quantity: 0, price: 0 },
-    { name: "Vanilla Bean Crème Brûlée2", quantity: 0, price: 0 },
-  ],
+  items: [],
 };
 
 function App() {

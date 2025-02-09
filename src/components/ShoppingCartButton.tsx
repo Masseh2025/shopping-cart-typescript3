@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Cart from "/assets/images/icon-add-to-cart.svg";
 
 import { cn } from "../utils/cn";
@@ -11,14 +9,18 @@ import {
 type ShoppingCartButtonProps = {
   name: string;
   price: number;
+  isActive: boolean;
+  setIsActive: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 export default function ShoppingCartButton({
   name,
-
   price,
+  isActive,
+  setIsActive,
 }: ShoppingCartButtonProps) {
-  const [isActive, setIsActive] = useState(false);
+  // const isActive = productList?.items.find((item) => item.name === name)?.isActive
+
   const dispatch = useProductListDispatch();
   const productList = useProductList();
 
@@ -49,7 +51,13 @@ export default function ShoppingCartButton({
           <span>
             {productList?.items.find((item) => item.name === name)?.quantity}
           </span>
-          <button onClick={() => dispatch!({ type: "decrement" })}>-</button>
+          <button
+            onClick={() =>
+              dispatch!({ type: "decrement", payload: [name, price] })
+            }
+          >
+            -
+          </button>
         </div>
       ) : null}
     </div>
