@@ -25,7 +25,7 @@ function DesertItem({ image, name, category, price }: DesertItemProps) {
         <p className="font-semibold">{name}</p>
         <p className="text-red font-semibold">${price}</p>
       </div>
-      <ShoppingCartButton name={name} category={category} price={price} />
+      <ShoppingCartButton name={name} price={price} />
     </li>
   );
 }

@@ -3,26 +3,29 @@ import { useState } from "react";
 import Cart from "/assets/images/icon-add-to-cart.svg";
 
 import { cn } from "../utils/cn";
-import { useProductListDispatch } from "../contexts/ProductListContext";
+import {
+  useProductListDispatch,
+  useProductList,
+} from "../contexts/ProductListContext";
 
 type ShoppingCartButtonProps = {
   name: string;
-  category: string;
   price: number;
 };
 
 export default function ShoppingCartButton({
   name,
-  category,
+
   price,
 }: ShoppingCartButtonProps) {
   const [isActive, setIsActive] = useState(false);
   const dispatch = useProductListDispatch();
+  const productList = useProductList();
 
   return (
     <div
       onClick={() => {
-        if (!isActive) dispatch!({ type: "increment", payload: name });
+        if (!isActive) dispatch!({ type: "increment", payload: [name, price] });
         setIsActive(true);
       }}
       className={cn(
@@ -37,10 +40,15 @@ export default function ShoppingCartButton({
       {isActive ? (
         <div>
           <button
-            onClick={() => dispatch!({ type: "increment", payload: name })}
+            onClick={() =>
+              dispatch!({ type: "increment", payload: [name, price] })
+            }
           >
             +
           </button>
+          <span>
+            {productList?.items.find((item) => item.name === name)?.quantity}
+          </span>
           <button onClick={() => dispatch!({ type: "decrement" })}>-</button>
         </div>
       ) : null}

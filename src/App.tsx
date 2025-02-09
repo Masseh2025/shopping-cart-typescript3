@@ -5,30 +5,31 @@ import {
   ProductListDispatchContext,
 } from "./contexts/ProductListContext";
 
-type ItemsType = { name: string; quantity: number; selected: boolean };
+type ItemsType = { name: string; quantity: number; price: number };
 
 export type StateProps = { items: ItemsType[] };
 
 export type Actions = { type: "decrement" };
 export type ActionsWithPayload =
   | { type: "select"; payload: string }
-  | { type: "increment"; payload: string };
+  | { type: "increment"; payload: [name: string, price: number] };
 
 function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
   switch (action.type) {
     case "increment": {
+      const [name, price] = action.payload;
       console.log(action.payload);
 
       const itemsExists = state.items.find((item) =>
-        item.name.toLocaleLowerCase().includes(action.payload.toLowerCase())
+        item.name.toLowerCase().includes(name.toLowerCase())
       );
 
       return {
         items: [
           {
-            name: action.payload,
+            name: name,
             quantity: itemsExists ? itemsExists.quantity + 1 : 0,
-            selected: false,
+            price: price,
           },
           ...state.items.filter((item) => item !== itemsExists),
         ],
@@ -45,8 +46,8 @@ function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
 
 const initialState: StateProps = {
   items: [
-    { name: "Vanilla Bean Crème Brûlée", quantity: 0, selected: false },
-    { name: "Vanilla Bean Crème Brûlée2", quantity: 0, selected: false },
+    { name: "Vanilla Bean Crème Brûlée", quantity: 0, price: 0 },
+    { name: "Vanilla Bean Crème Brûlée2", quantity: 0, price: 0 },
   ],
 };
 
