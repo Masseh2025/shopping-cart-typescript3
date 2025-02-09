@@ -1,47 +1,66 @@
 import { useReducer } from "react";
 import DessertItemGrid from "./layouts/DessertItemGrid";
+import {
+  ProductListContext,
+  ProductListDispatchContext,
+} from "./contexts/ProductListContext";
 
-type StateProps = {
-  items: { name: string; quantity: number; selected: boolean }[];
-};
+type ItemsType = { name: string; quantity: number; selected: boolean };
 
-type Actions = { type: "increment" | "decrement" };
-type ActionsWithPayload = { type: "select"; payload: string };
+export type StateProps = { items: ItemsType[] };
+
+export type Actions = { type: "decrement" };
+export type ActionsWithPayload =
+  | { type: "select"; payload: string }
+  | { type: "increment"; payload: string };
 
 function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
   switch (action.type) {
-    case "increment":
-      console.log("increment");
-      return { ...state };
+    case "increment": {
+      console.log(action.payload);
+
+      const itemsExists = state.items.find((item) =>
+        item.name.toLocaleLowerCase().includes(action.payload.toLowerCase())
+      );
+
+      return {
+        items: [
+          {
+            name: action.payload,
+            quantity: itemsExists ? itemsExists.quantity + 1 : 0,
+            selected: false,
+          },
+          ...state.items.filter((item) => item !== itemsExists),
+        ],
+      };
+    }
+
     case "decrement":
       console.log("decrement");
       return { ...state };
     case "select":
-      state.items.map((item) => {
-        if (item.name === action.payload) {
-          item.selected = true;
-          return { ...state };
-        }
-        item.selected = false;
-      });
       return { ...state };
   }
 }
 
 const initialState: StateProps = {
   items: [
-    { name: "bob", quantity: 23, selected: false },
-    { name: "bob2", quantity: 23, selected: false },
-    { name: "bob3", quantity: 23, selected: false },
+    { name: "Vanilla Bean Crème Brûlée", quantity: 0, selected: false },
+    { name: "Vanilla Bean Crème Brûlée2", quantity: 0, selected: false },
   ],
 };
+
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   return (
-    <main className="h-screen font-display flex flex-col items-center overflow-scroll bg-rose-50">
-      <DessertItemGrid />
-    </main>
+    <ProductListContext.Provider value={state}>
+      <ProductListDispatchContext.Provider value={dispatch}>
+        <main className="h-screen font-display flex flex-col items-center overflow-scroll bg-rose-50 p-4 md:p-8 lg:p-16">
+          <DessertItemGrid />
+        </main>
+      </ProductListDispatchContext.Provider>
+    </ProductListContext.Provider>
   );
 }
 
