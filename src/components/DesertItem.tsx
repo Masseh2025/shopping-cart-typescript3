@@ -21,13 +21,21 @@ function DesertItem({ image, name, category, price }: DesertItemProps) {
   }
 
   return (
-    <li className="p-4 flex flex-col">
-      <div className="flex relative mb-8 md:hidden">
+    <li className="p-4 flex flex-col relative">
+      <div className="relative flex mb-8 md:hidden">
         <img
           src={image.mobile}
           alt={name}
           className={cn("rounded-md", { "border-3 border-red": isActive })}
         />
+        <div className="absolute w-full flex justify-center bottom-0 translate-y-1/2">
+          <ShoppingCartButton
+            name={name}
+            price={price}
+            isActive={isActive}
+            setIsActive={setIsActive}
+          />
+        </div>
       </div>
       <div className=" relative mb-8 hidden md:flex lg:hidden">
         <img
@@ -37,6 +45,14 @@ function DesertItem({ image, name, category, price }: DesertItemProps) {
             "border-3 border-red": isActive,
           })}
         />
+        <div className="absolute w-full flex justify-center bottom-0 translate-y-1/2">
+          <ShoppingCartButton
+            name={name}
+            price={price}
+            isActive={isActive}
+            setIsActive={setIsActive}
+          />
+        </div>
       </div>
 
       <div className="relative mb-8 hidden lg:flex">
@@ -47,18 +63,20 @@ function DesertItem({ image, name, category, price }: DesertItemProps) {
             "border-4 border-red": isActive,
           })}
         />
+        <div className="absolute w-full flex justify-center bottom-0 translate-y-1/2">
+          <ShoppingCartButton
+            name={name}
+            price={price}
+            isActive={isActive}
+            setIsActive={setIsActive}
+          />
+        </div>
       </div>
       <div className="text-rose-900">
         <p className="text-sm">{category}</p>
         <p className="font-semibold">{name}</p>
         <p className="text-red font-semibold">${price}</p>
       </div>
-      <ShoppingCartButton
-        name={name}
-        price={price}
-        isActive={isActive}
-        setIsActive={setIsActive}
-      />
     </li>
   );
 }

@@ -1,4 +1,6 @@
 import Cart from "/assets/images/icon-add-to-cart.svg";
+import Minus from "/assets/images/icon-decrement-quantity.svg";
+import Increment from "/assets/images/icon-increment-quantity.svg";
 
 import { cn } from "../utils/cn";
 import {
@@ -40,23 +42,25 @@ export default function ShoppingCartButton({
       {!isActive ? <img src={Cart} alt="cart button" className="mr-2" /> : null}
       {!isActive ? "Add to cart" : null}
       {isActive ? (
-        <div>
+        <div className="flex justify-between w-full items-center">
           <button
+            className="cursor-pointer w-6 h-6 border-2 rounded-full p-1 flex justify-center items-center"
             onClick={() =>
-              dispatch!({ type: "increment", payload: [name, price] })
+              dispatch!({ type: "decrement", payload: [name, price] })
             }
           >
-            +
+            <img src={Minus} alt="" />
           </button>
           <span>
             {productList?.items.find((item) => item.name === name)?.quantity}
           </span>
           <button
+            className="cursor-pointer w-6 h-6 border-2 rounded-full p-1 flex justify-center items-center"
             onClick={() =>
-              dispatch!({ type: "decrement", payload: [name, price] })
+              dispatch!({ type: "increment", payload: [name, price] })
             }
           >
-            -
+            <img src={Increment} alt="" />
           </button>
         </div>
       ) : null}
