@@ -6,7 +6,7 @@ import {
 } from "./contexts/ProductListContext";
 import ProductList from "./layouts/ProuctList";
 
-type ItemsType = {
+export type ItemsType = {
   name: string;
   quantity: number;
   price: number;
