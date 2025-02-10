@@ -1,6 +1,6 @@
 import { useProductList } from "../contexts/ProductListContext";
 import Cake from "/assets/images/illustration-empty-cart.svg";
-
+import CarbonNuetral from "/assets/images/icon-carbon-neutral.svg";
 export default function ProductList() {
   const productList = useProductList();
   let quantity;
@@ -12,7 +12,7 @@ export default function ProductList() {
     );
   }
   return productList?.items.length !== 0 ? (
-    <div className="bg-white text-rose-900 rounded-md p-4 w-full">
+    <div className="bg-white text-rose-900 rounded-md p-4 w-full lg:max-w-xl">
       <h2 className="text-red text-2xl font-bold">
         Your Cart ({productList?.items.length})
       </h2>
@@ -33,14 +33,20 @@ export default function ProductList() {
           );
         })}
       </ul>
-      <div>
-        <p className="rose-900 mt-4">Order Total</p>
-        <p>${quantity}</p>
+      <div className="flex justify-between mt-4 mb-4">
+        <p className="rose-900">Order Total</p>
+        <p className="font-bold text-2xl">${quantity}</p>
       </div>
-      <button>Confirm order</button>
+      <div className="flex justify-center items-center p-2 bg-rose-50 mb-4">
+        <img src={CarbonNuetral} alt="carbon nuetral symbol" />
+        <p>This is a carbon neutral delivery</p>
+      </div>
+      <button className="w-full px-4 py-2 font-bold rounded-full bg-red text-white hover:text-white hover:bg-red-800 cursor-pointer">
+        Confirm order
+      </button>
     </div>
   ) : (
-    <div className="bg-white text-rose-900 rounded-md p-4 w-full">
+    <div className="bg-white text-rose-900 rounded-md p-4 w-full lg:max-w-xl">
       <h2 className="text-red text-2xl font-bold text-left">
         Your Cart ({productList?.items.length})
       </h2>

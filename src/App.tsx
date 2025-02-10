@@ -92,7 +92,7 @@ function App() {
   return (
     <ProductListContext.Provider value={state}>
       <ProductListDispatchContext.Provider value={dispatch}>
-        <main className="h-screen font-display flex flex-col items-center overflow-scroll bg-rose-50 p-4 md:p-8 lg:p-16">
+        <main className="h-screen font-display flex flex-col items-center overflow-scroll bg-rose-50 p-4 md:p-8 lg:p-16 lg:flex-row lg:items-start lg:justify-center">
           <DessertItemGrid />
           <ProductList />
         </main>
