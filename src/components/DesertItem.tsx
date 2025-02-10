@@ -20,6 +20,10 @@ function DesertItem({ image, name, category, price }: DesertItemProps) {
     setIsActive(false);
   }
 
+  if (isActive && !productList?.items.find((item) => item.name === name)) {
+    setIsActive(false);
+  }
+
   return (
     <li className="p-4 flex flex-col relative">
       <div className="relative flex mb-8 md:hidden">

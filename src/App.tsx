@@ -4,6 +4,7 @@ import {
   ProductListContext,
   ProductListDispatchContext,
 } from "./contexts/ProductListContext";
+import ProductList from "./layouts/ProuctList";
 
 type ItemsType = {
   name: string;
@@ -46,25 +47,33 @@ function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
 
     case "decrement": {
       const [name, price] = action.payload;
-      console.log(action.payload);
 
       const itemsExists = state.items.find((item) =>
         item.name.toLowerCase().includes(name.toLowerCase())
       );
 
+      const list = state.items.filter((item) => item.quantity > 0);
+
+      if (itemsExists!.quantity > 1) {
+        console.log(list, itemsExists?.quantity);
+        return {
+          items: [
+            {
+              name: name,
+              quantity: itemsExists
+                ? itemsExists.quantity < 1
+                  ? 0
+                  : itemsExists.quantity - 1
+                : 1,
+              price: price,
+            },
+            ...list.filter((item) => item !== itemsExists),
+          ],
+        };
+      }
+      console.log("hey");
       return {
-        items: [
-          {
-            name: name,
-            quantity: itemsExists
-              ? itemsExists.quantity < 1
-                ? 0
-                : itemsExists.quantity - 1
-              : 1,
-            price: price,
-          },
-          ...state.items.filter((item) => item !== itemsExists),
-        ],
+        items: [...list.filter((item) => item !== itemsExists)],
       };
     }
 
@@ -85,6 +94,7 @@ function App() {
       <ProductListDispatchContext.Provider value={dispatch}>
         <main className="h-screen font-display flex flex-col items-center overflow-scroll bg-rose-50 p-4 md:p-8 lg:p-16">
           <DessertItemGrid />
+          <ProductList />
         </main>
       </ProductListDispatchContext.Provider>
     </ProductListContext.Provider>
