@@ -5,11 +5,17 @@ import {
 import Cake from "/assets/images/illustration-empty-cart.svg";
 import CarbonNuetral from "/assets/images/icon-carbon-neutral.svg";
 import Remove from "/assets/images/icon-remove-item.svg";
-export default function ProductList() {
+
+type ProductListProps = {
+  isConfirmed: boolean;
+  setIsConfirmed: React.Dispatch<React.SetStateAction<boolean>>;
+};
+export default function ProductList({ setIsConfirmed }: ProductListProps) {
   const productList = useProductList();
   const dispatch = useProductListDispatch();
+
   let quantity;
-  console.log(quantity);
+
   if (productList?.items.length !== 0) {
     quantity = productList?.items.reduce(
       (acc, curr) => (acc += curr.price * curr.quantity),
@@ -56,7 +62,10 @@ export default function ProductList() {
         <img src={CarbonNuetral} alt="carbon nuetral symbol" />
         <p>This is a carbon neutral delivery</p>
       </div>
-      <button className="w-full px-4 py-2 font-bold rounded-full bg-red text-white hover:text-white hover:bg-red-800 cursor-pointer">
+      <button
+        onClick={() => setIsConfirmed(true)}
+        className="w-full px-4 py-2 font-bold rounded-full bg-red text-white hover:text-white hover:bg-red-800 cursor-pointer"
+      >
         Confirm order
       </button>
     </div>

@@ -1,10 +1,11 @@
-import { useReducer } from "react";
+import { useReducer, useState } from "react";
 import DessertItemGrid from "./layouts/DessertItemGrid";
 import {
   ProductListContext,
   ProductListDispatchContext,
 } from "./contexts/ProductListContext";
 import ProductList from "./layouts/ProuctList";
+import OrderModel from "./components/OrderModel";
 
 export type ItemsType = {
   name: string;
@@ -14,13 +15,13 @@ export type ItemsType = {
 
 export type StateProps = { items: ItemsType[] };
 
-export type Actions = { type: "select" };
 export type ActionsWithPayload =
   | { type: "increment"; payload: [name: string, price: number] }
   | { type: "decrement"; payload: [name: string, price: number] }
-  | { type: "removeItem"; payload: [name: string] };
+  | { type: "removeItem"; payload: [name: string] }
+  | { type: "resetItems" };
 
-function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
+function reducer(state: StateProps, action: ActionsWithPayload) {
   switch (action.type) {
     case "increment": {
       const [name, price] = action.payload;
@@ -83,7 +84,12 @@ function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
         items: [...state.items.filter((item) => item.name !== name)],
       };
     }
-    case "select":
+    case "resetItems": {
+      return {
+        items: [],
+      };
+    }
+    default:
       return { ...state };
   }
 }
@@ -94,13 +100,30 @@ const initialState: StateProps = {
 
 function App() {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
-  return (
+  return isConfirmed ? (
+    <ProductListContext.Provider value={state}>
+      <ProductListDispatchContext.Provider value={dispatch}>
+        <main className="relative h-full font-display flex flex-col items-center overflow-scroll bg-rose-50 p-4 md:p-8 lg:p-16 lg:flex-row lg:items-start lg:justify-center">
+          <OrderModel setIsConfirmed={setIsConfirmed} />
+          <DessertItemGrid />
+          <ProductList
+            isConfirmed={isConfirmed}
+            setIsConfirmed={setIsConfirmed}
+          />
+        </main>
+      </ProductListDispatchContext.Provider>
+    </ProductListContext.Provider>
+  ) : (
     <ProductListContext.Provider value={state}>
       <ProductListDispatchContext.Provider value={dispatch}>
         <main className="h-screen font-display flex flex-col items-center overflow-scroll bg-rose-50 p-4 md:p-8 lg:p-16 lg:flex-row lg:items-start lg:justify-center">
           <DessertItemGrid />
-          <ProductList />
+          <ProductList
+            isConfirmed={isConfirmed}
+            setIsConfirmed={setIsConfirmed}
+          />
         </main>
       </ProductListDispatchContext.Provider>
     </ProductListContext.Provider>
