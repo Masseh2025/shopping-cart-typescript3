@@ -17,7 +17,8 @@ export type StateProps = { items: ItemsType[] };
 export type Actions = { type: "select" };
 export type ActionsWithPayload =
   | { type: "increment"; payload: [name: string, price: number] }
-  | { type: "decrement"; payload: [name: string, price: number] };
+  | { type: "decrement"; payload: [name: string, price: number] }
+  | { type: "removeItem"; payload: [name: string] };
 
 function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
   switch (action.type) {
@@ -76,7 +77,12 @@ function reducer(state: StateProps, action: Actions | ActionsWithPayload) {
         items: [...list.filter((item) => item !== itemsExists)],
       };
     }
-
+    case "removeItem": {
+      const [name] = action.payload;
+      return {
+        items: [...state.items.filter((item) => item.name !== name)],
+      };
+    }
     case "select":
       return { ...state };
   }

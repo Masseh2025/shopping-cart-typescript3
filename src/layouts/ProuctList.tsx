@@ -1,8 +1,13 @@
-import { useProductList } from "../contexts/ProductListContext";
+import {
+  useProductList,
+  useProductListDispatch,
+} from "../contexts/ProductListContext";
 import Cake from "/assets/images/illustration-empty-cart.svg";
 import CarbonNuetral from "/assets/images/icon-carbon-neutral.svg";
+import Remove from "/assets/images/icon-remove-item.svg";
 export default function ProductList() {
   const productList = useProductList();
+  const dispatch = useProductListDispatch();
   let quantity;
   console.log(quantity);
   if (productList?.items.length !== 0) {
@@ -21,14 +26,24 @@ export default function ProductList() {
           return (
             <li
               key={item.name}
-              className="flex flex-col p-4 border-b-2 border-rose-100"
+              className=" flex  items-center justify-between p-4 border-b-2 border-rose-100"
             >
-              <h3 className="text-rose-900">{item.name}</h3>
-              <div className="flex text-rose-500">
-                <p className="mr-4 text-red">{item.quantity}x</p>
-                <p className="mr-2">@ ${item.price}</p>
-                <p>${item.price * item.quantity}</p>
+              <div className="flex flex-col">
+                <h3 className="text-rose-900">{item.name}</h3>
+                <div className="flex text-rose-500">
+                  <p className="mr-4 text-red">{item.quantity}x</p>
+                  <p className="mr-2">@ ${item.price}</p>
+                  <p>${item.price * item.quantity}</p>
+                </div>
               </div>
+              <button
+                onClick={() =>
+                  dispatch!({ type: "removeItem", payload: [item.name] })
+                }
+                className="cursor-pointer w-5 h-5 border-2 border-rose-400 rounded-full p-.5 flex justify-center items-center"
+              >
+                <img src={Remove} alt="" />
+              </button>
             </li>
           );
         })}
